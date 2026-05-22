@@ -43,8 +43,8 @@ Full C++ mastery via the project. Coverage must include, driven by project need:
 - **Concurrency model:** evolve across the book — blocking → event loop
   (kqueue/epoll behind one interface) → event loop + worker thread pool.
 - **No reference implementation.** All code the reader needs is illustrated
-  inline in chapters. The reader builds their own `kvd`/`kvcli` in their own
-  working directory.
+  inline in chapters. The reader builds their own `kvd`/`kvcli` in `src/` within
+  this same repo.
 
 ## Project: Kestrel
 
@@ -126,10 +126,16 @@ reactor pattern; MPSC queue; keyspace sharding.
 ## Repo layout
 
 ```
-book.toml
+book.toml             # mdbook config (src = "book")
 book/                 # mdbook chapters (SUMMARY.md + partN/*.md)
+src/                  # the reader's Kestrel implementation (built per chapter)
+  CMakeLists.txt
+  core/ protocol/ store/ persistence/ net/ concurrency/ server/ client/ test/
 CLAUDE.md             # tutor + code-review contract
 ```
+
+The book and the reader's code live in one repo: `book/` is the prose, `src/` is
+where the reader builds Kestrel. The module layout above appears under `src/`.
 
 ## Chapter outline (21 chapters, 8 parts)
 
