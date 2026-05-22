@@ -35,7 +35,9 @@ Full C++ mastery via the project. Coverage must include, driven by project need:
 ## Technical decisions
 
 - **Language standard:** C++23.
-- **Dependencies:** raw POSIX + standard library only. No third-party libraries.
+- **Dependencies:** raw POSIX + standard library only, with **one** exception: a
+  third-party test framework (doctest or Catch2), introduced mid-book to teach
+  C++ dependency management. No other third-party libraries.
 - **Platforms:** macOS and Linux (POSIX). No Windows.
 - **Build system:** CMake.
 - **Concurrency model:** evolve across the book — blocking → event loop
@@ -48,20 +50,21 @@ Full C++ mastery via the project. Coverage must include, driven by project need:
 
 Final feature set the reader builds:
 
-- Custom binary-safe wire protocol over TCP.
+- RESP (Redis serialization protocol) over TCP, implemented by hand from the
+  published spec. `kvcli` is wire-compatible with `redis-cli`.
 - In-memory store with value types: strings, lists, sorted sets, hashes.
 - TTL expiry and LRU eviction.
 - Durability: write-ahead log + snapshots + crash recovery.
 - Non-blocking event loop (kqueue/epoll) feeding a worker thread pool.
 - CLI client (`kvcli`); server (`kvd`).
 - Benchmarking and profiling.
-- std-only, CMake, clean under ASan/UBSan/TSan.
+- CMake, clean under ASan/UBSan/TSan.
 
 Module layout the reader produces:
 
 ```
 core/         Value type, Buffer, ownership & memory primitives
-protocol/     wire format: serialize / parse (template-driven)
+protocol/     RESP serialize / parse (template-driven)
 store/        hash table, expiry, eviction, data-type impls
 persistence/  WAL, snapshot, recovery, compaction
 net/          socket RAII wrappers, event loop, connections
@@ -128,13 +131,14 @@ book/                 # mdbook chapters (SUMMARY.md + partN/*.md)
 CLAUDE.md             # tutor + code-review contract
 ```
 
-## Chapter outline (20 chapters, 8 parts)
+## Chapter outline (21 chapters, 8 parts)
 
 **Part 0 — The C++ mental model & toolchain**
 1. Why C++ feels alien — compilation/linking model, the abstract machine,
    undefined behavior, value vs reference semantics.
 2. Toolchain & skeleton — compiler, CMake, sanitizers, debugger; build a tiny
-   test harness from scratch; first runnable binary.
+   test harness from scratch (migrated to a real framework in ch.8); first
+   runnable binary.
 
 **Part 1 — Values & memory**
 3. The `Value` type — stack vs heap, RAII, rule of 0/3/5, copy vs move
@@ -143,43 +147,47 @@ CLAUDE.md             # tutor + code-review contract
    allocators, alignment, `std::span`.
 5. The type system — templates, concepts, type traits, `std::variant`.
 
-**Part 2 — Protocol & streams**
-6. Wire protocol & parsing — streams, `string_view`, zero-copy parsing,
-   endianness, byte handling, a generic serializer via templates.
+**Part 2 — Protocol, streams & dependencies**
+6. RESP protocol & parsing — implement RESP from its spec; streams,
+   `string_view`, zero-copy parsing, endianness, byte handling, a generic
+   serializer via templates.
 7. Error handling — `std::expected`, exceptions vs error codes, `noexcept`,
    RAII cleanup.
+8. C++ dependency management — the no-npm reality; CMake `FetchContent` vs
+   `find_package`; vcpkg/Conan overview; header-only vs compiled; linking/ABI.
+   Migrate the hand-rolled harness to a real test framework (doctest/Catch2).
 
 **Part 3 — The store & algorithms**
-8. Hash table from scratch — open addressing vs chaining, hashing, load
+9. Hash table from scratch — open addressing vs chaining, hashing, load
    factor/rehash, iterator invalidation, vs STL containers.
-9. Expiry & eviction — TTL, exact LRU (intrusive list + map), sampled LRU.
-10. More data types — lists (ring buffer/deque), sorted sets (skip list).
+10. Expiry & eviction — TTL, exact LRU (intrusive list + map), sampled LRU.
+11. More data types — lists (ring buffer/deque), sorted sets (skip list).
 
 **Part 4 — Persistence (filesystem & streams)**
-11. Write-ahead log — append-only I/O, `fsync`, `std::filesystem`, file
+12. Write-ahead log — append-only I/O, `fsync`, `std::filesystem`, file
     streams, CRC checksums, crash safety.
-12. Snapshots & recovery — serialization format, log compaction, replay on
+13. Snapshots & recovery — serialization format, log compaction, replay on
     startup.
 
 **Part 5 — Networking**
-13. Sockets from scratch — Berkeley sockets, RAII fd wrapper, blocking server,
+14. Sockets from scratch — Berkeley sockets, RAII fd wrapper, blocking server,
     connection lifecycle.
-14. The event loop — non-blocking I/O, kqueue/epoll behind one interface, the
+15. The event loop — non-blocking I/O, kqueue/epoll behind one interface, the
     reactor pattern, connection state machines.
-15. Buffered connection I/O — partial reads/writes, backpressure,
+16. Buffered connection I/O — partial reads/writes, backpressure,
     protocol-meets-socket.
 
 **Part 6 — Concurrency**
-16. Threads & the memory model — `std::thread`/`jthread`, atomics,
+17. Threads & the memory model — `std::thread`/`jthread`, atomics,
     `memory_order`, data races, what TSan catches.
-17. The worker pool — task queue, mutex/condition_variable, MPSC queue,
+18. The worker pool — task queue, mutex/condition_variable, MPSC queue,
     sharding the keyspace to cut contention.
-18. Tying threads to the loop — dispatch, cross-thread ownership/lifetime,
+19. Tying threads to the loop — dispatch, cross-thread ownership/lifetime,
     atomic `shared_ptr`.
 
 **Part 7 — Finishing**
-19. The `kvcli` client.
-20. Benchmark, profile, capstone — pipelining, optional pub/sub; observability.
+20. The `kvcli` client — wire-compatible with `redis-cli`.
+21. Benchmark, profile, capstone — pipelining, optional pub/sub; observability.
 
 **Appendices** — UB catalog; sanitizer guide; CMake reference; JS/Python→C++
 glossary.
@@ -187,5 +195,7 @@ glossary.
 ## Out of scope
 
 - Windows support.
-- Third-party libraries (including Asio, test frameworks).
+- Third-party libraries beyond the single test framework (no Asio, no HTTP
+  library, etc.).
+- Inventing a custom wire protocol (RESP is implemented from its published spec).
 - A maintained reference implementation.
