@@ -1,0 +1,8 @@
+/* Raw-HTML callouts used by the book (preprocessor-free). */
+.callout { border-left: 4px solid #6b7280; border-radius: 4px; padding: 0.6em 1em; margin: 1em 0; background: rgba(127,127,127,0.08); }
+.callout-jsts { border-left-color: #3b82f6; }
+.callout-ub { border-left-color: #ef4444; }
+.callout-algo { border-left-color: #8b5cf6; }
+.callout-ask { border-left-color: #10b981; }
+.callout-experiment { border-left-color: #f59e0b; }
+.callout-checkpoint { border-left-color: #22c55e; }

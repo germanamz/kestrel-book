@@ -1,0 +1,26 @@
+[book]
+title = "Kestrel — Learn C++ by Building a Networked Key-Value Store"
+authors = ["German AMZ"]
+description = "Learn modern C++ (C++23) by building Kestrel, a networked, persistent, concurrent key-value store, from scratch — concept-first, with Claude Code as your tutor and reviewer."
+language = "en"
+text-direction = "ltr"
+src = "book"
+
+[build]
+build-dir = "docs/book"
+
+[output.html]
+default-theme = "navy"
+preferred-dark-theme = "navy"
+additional-css = ["theme/callouts.css"]
+
+[output.html.fold]
+enable = true
+level = 1
+
+# Setup (run once after cloning):
+#   cargo install mdbook        # requires mdbook >= 0.5
+#   mdbook serve                # live preview at http://localhost:3000
+#
+# Callouts are plain HTML <div class="callout ..."> styled by theme/callouts.css.
+# No preprocessor is required. See AUTHORING.md for the callout vocabulary.

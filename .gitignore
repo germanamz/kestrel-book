@@ -1,0 +1,14 @@
+# mdbook build output
+/docs/book/
+
+# C++ build artifacts (reader's implementation)
+src/build/
+*.o
+*.obj
+*.out
+compile_commands.json
+
+# Editor / OS
+.DS_Store
+.vscode/
+.idea/
