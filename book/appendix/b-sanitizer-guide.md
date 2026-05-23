@@ -72,7 +72,7 @@ bugs (use ASan).
 some shops ship it in production builds with `-fsanitize-trap` (turn
 UB into a trap instruction).
 
-**Reading a report:** "runtime error: <description>" plus a single
+**Reading a report:** `runtime error: <description>` plus a single
 stack trace. Less informative than ASan but enough to find the line.
 
 **Knobs:**
