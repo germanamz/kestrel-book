@@ -6,3 +6,34 @@
 .callout-ask { border-left-color: #10b981; }
 .callout-experiment { border-left-color: #f59e0b; }
 .callout-checkpoint { border-left-color: #22c55e; }
+
+.callout blockquote.has-copy-prompt { position: relative; padding-right: 2.5em; }
+.callout blockquote.has-copy-prompt .copy-prompt-button {
+    position: absolute;
+    top: 0.4em;
+    right: 0.4em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75em;
+    height: 1.75em;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    padding: 0;
+    opacity: 0.5;
+    transition: opacity 0.15s ease-in-out;
+}
+.callout blockquote.has-copy-prompt .copy-prompt-button svg {
+    width: 1em;
+    height: 1em;
+    fill: currentColor;
+}
+.callout blockquote.has-copy-prompt .copy-prompt-button:hover,
+.callout blockquote.has-copy-prompt .copy-prompt-button:focus {
+    opacity: 1;
+}
+.callout blockquote.has-copy-prompt .copy-prompt-button.is-flashing {
+    opacity: 1;
+    color: #22c55e;
+}

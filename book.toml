@@ -13,6 +13,7 @@ build-dir = "docs/book"
 default-theme = "navy"
 preferred-dark-theme = "navy"
 additional-css = ["theme/callouts.css"]
+additional-js = ["theme/copy-prompt.js"]
 
 [output.html.fold]
 enable = true
